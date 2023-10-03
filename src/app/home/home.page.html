@@ -1,0 +1,101 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title> Open Trivia </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Open Trivia</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+    <div class="wrapper">
+      <!-- Not connected -->
+      <div *ngIf="!connected" class="flex flex-col gap-4">
+        <ion-item>
+          <ion-input type="text" [(ngModel)]="username" label="Votre pseudo" labelPlacement="floating" />
+        </ion-item>
+
+        <ion-item>
+          <ion-select label="Difficulté" value="{{ selectedDifficulty }}" [(ngModel)]="selectedDifficulty">
+            <ion-select-option *ngFor="let diffi of difficulties" value="{{ diffi }}">
+              {{ diffi.charAt(0).toUpperCase() + diffi.substring(1) }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-toggle [(ngModel)]="rememberMe">Se souvenir de moi</ion-toggle>
+        </ion-item>
+
+        <div class="flex flex-col items-start">
+          <div>
+            <ion-button type="button" (click)="startGame()"> Commencer </ion-button>
+          </div>
+        </div>
+      </div>
+
+      <ion-alert
+        [isOpen]="displayError"
+        header="Information Manquante"
+        message="{{ errorMsg }}"
+        [buttons]="alertButtons"
+        (didDismiss)="setErrorAlert(false)"
+      ></ion-alert>
+
+      <!-- Game started -->
+      <div *ngIf="connected && questions.length > 0">
+        <ion-text color="primary" class="text-left">
+          <h3>Bienvenue {{ username }}</h3>
+        </ion-text>
+
+        <div *ngIf="questionIndex < questions.length">
+          <h2>{{ questions[questionIndex].question}}</h2>
+
+          <ion-grid>
+            <ion-row>
+              <ion-col size="6" *ngFor="let answer of shuffled">
+                <ion-button
+                  class="w-full"
+                  [color]="selectedAnswer === null 
+                           ? 'primary' 
+                           : questions[questionIndex].correct_answer === answer 
+                             ? 'success' 
+                             : 'danger'
+                          "
+                  (click)="validateAnswer(answer)"
+                  >{{ answer }}</ion-button
+                >
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="selectedAnswer !== null">
+              <ion-col size="12">
+                <ion-button class="w-full" (click)="nextQuestion()">
+                  Question suivante <i class="arrow-right"></i>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
+        <div *ngIf="questionIndex === questions.length">
+          <p>Fin de la partie !!!</p>
+          <p>Vous avez cumulé un total de {{ points }} points.</p>
+          <ion-button (click)="replay()">Rejouer</ion-button>
+          <ion-button (click)="reset()">Revenir à l'accueil</ion-button>
+        </div>
+
+        <ion-toast
+          [isOpen]="isToastOpen"
+          message="{{ toastMsg }}"
+          [duration]="2000"
+          (didDismiss)="setToastOpen(false)"
+        ></ion-toast>
+      </div>
+    </div>
+  </div>
+</ion-content>
