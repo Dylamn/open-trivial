@@ -10,3 +10,8 @@ export type Question = {
     correct_answer: string
     incorrect_answers: Array<string>
 }
+
+export type OpenTDBResponse = {
+    response_code: number
+    results: Array<Question>
+}

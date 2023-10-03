@@ -95,8 +95,8 @@ export class HomePage {
     this.setToastOpen(true, this.openTriviaSrv.getToastResponse(correctAnswer, answer))
   }
 
-  replay() {
-    this.initGame()
+  async replay() {
+    await this.initGame()
   }
 
   reset() {

@@ -1,47 +1,45 @@
 import { Injectable } from '@angular/core'
-import { Difficulties, Question } from 'src/types'
+import { HttpClient } from '@angular/common/http'
+import { Difficulties, Question, OpenTDBResponse } from 'src/types'
 
 @Injectable({
   providedIn: 'root',
 })
 export class OpenTriviaService {
-  constructor() {}
+  baseUrl: string = 'https://opentdb.com/api.php'
+  constructor(private http: HttpClient) {}
 
-  async getQuestions(difficulty: Difficulties) {
-    const questions = [
-      {
-        category: 'Entertainment: Japanese Anime & Manga',
-        type: 'multiple',
-        difficulty: 'easy',
-        question: 'In "Fairy Tail", what is the nickname of Natsu Dragneel?',
-        correct_answer: 'The Salamander',
-        incorrect_answers: ['The Dragon Slayer', 'The Dragon', 'The Demon'],
-      },
-      {
-        category: 'Entertainment: Video Games',
-        type: 'boolean',
-        difficulty: 'medium',
-        question:
-          '"Return to Castle Wolfenstein" was the only game of the Wolfenstein series where you don\'t play as William "B.J." Blazkowicz',
-        correct_answer: 'False',
-        incorrect_answers: ['True'],
-      },
-    ] as Array<Question>
+  async getQuestions(difficulty: Difficulties): Promise<Question[]> {
+    return new Promise((resolve, reject) => {
+      const params = new URLSearchParams({
+        amount: (10).toString(),
+        difficulty
+      })
+      const url = `${this.baseUrl}?${params.toString()}`
 
-    return questions
-    // .filter(item => item.difficulty === difficulty)
+      this.http.get(url).subscribe({
+        next: (data) => {
+          const questions = (data as OpenTDBResponse).results
+          resolve(questions)
+        },
+        error: (err) => {
+          console.error(err)
+          reject([])
+        },
+      })
+    })
   }
 
   shuffleAnswers(question: Question): Array<string> {
     const arrCopy = [...question.incorrect_answers, question.correct_answer]
 
     for (let i = arrCopy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = arrCopy[i];
-      arrCopy[i] = arrCopy[j];
-      arrCopy[j] = temp;
+      const j = Math.floor(Math.random() * (i + 1))
+      const temp = arrCopy[i]
+      arrCopy[i] = arrCopy[j]
+      arrCopy[j] = temp
     }
-    
+
     return arrCopy
   }
 
