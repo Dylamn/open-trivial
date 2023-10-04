@@ -19,7 +19,6 @@ export class GamePage implements OnInit {
   points: number = 0
   questions: Array<Question> = []
   questionIndex: number = 0
-  activeQuestion: Question | null = null
   shuffledAnswers: Array<string> = []
   selectedAnswer: string | null = null
 
@@ -89,7 +88,6 @@ export class GamePage implements OnInit {
 
     if (this.questionIndex < this.questions.length) {
       this.shuffleAnswers(this.questions[this.questionIndex])
-      this.activeQuestion = this.questions[this.questionIndex]
       return
     }
 
