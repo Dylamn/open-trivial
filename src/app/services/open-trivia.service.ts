@@ -7,7 +7,7 @@ import { Difficulties, Question, OpenTDBResponse } from 'src/types'
 })
 export class OpenTriviaService {
   baseUrl: string = 'https://opentdb.com/api.php'
-  numQuestions: number = 2
+  numQuestions: number = 10
 
   constructor(private http: HttpClient) {}
 
