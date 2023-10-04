@@ -69,7 +69,8 @@ export class HomePage implements OnInit {
   }
 
   async clearPreferences() {
-    await Preferences.clear()
+    await Preferences.remove({ key: 'username' })
+    await Preferences.remove({ key: 'difficulty' })
   }
 
   validateUsername() {
