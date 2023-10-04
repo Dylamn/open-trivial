@@ -22,7 +22,7 @@
         <ion-item>
           <ion-select label="Difficulté" value="{{ selectedDifficulty }}" [(ngModel)]="selectedDifficulty">
             <ion-select-option *ngFor="let diffi of difficulties" value="{{ diffi }}">
-              {{ diffi.charAt(0).toUpperCase() + diffi.substring(1) }}
+              {{ diffi | titlecase }}
             </ion-select-option>
           </ion-select>
         </ion-item>

@@ -7,12 +7,14 @@ import { Difficulties, Question, OpenTDBResponse } from 'src/types'
 })
 export class OpenTriviaService {
   baseUrl: string = 'https://opentdb.com/api.php'
+  numQuestions: number = 10
+
   constructor(private http: HttpClient) {}
 
   async getQuestions(difficulty: Difficulties): Promise<Question[]> {
     return new Promise((resolve, reject) => {
       const params = new URLSearchParams({
-        amount: (10).toString(),
+        amount: this.numQuestions.toString(),
         difficulty
       })
       const url = `${this.baseUrl}?${params.toString()}`
